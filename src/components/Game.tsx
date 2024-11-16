@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Keypad from './Keypad';
-import { toast } from 'react-toastify'
+import { toast, ToastContainer } from 'react-toastify'
 
 const Game = () => {
   const [secretNumber, setSecretNumber] = useState<number>(0);
@@ -67,6 +67,7 @@ const Game = () => {
 
   return (
     <Box p={5} maxWidth="400px" mx="auto" textAlign="center">
+          <ToastContainer />
       <Text fontSize="3xl" fontWeight="bold" mb={4}>
         Number Guesser Game
       </Text>

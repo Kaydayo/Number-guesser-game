@@ -1,11 +1,11 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import NumberGuesserGame from "./NumberGuesserGame";
 import { defaultSystem } from "@chakra-ui/react"
+import Game from "./components/Game";
 
 function App() {
   return (
     <ChakraProvider value={defaultSystem}>
-      <NumberGuesserGame />
+      <Game />
     </ChakraProvider>
   );
 }
