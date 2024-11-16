@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Box, Text } from '@chakra-ui/react';
+import { Button, Box, Text, Input } from '@chakra-ui/react';
 import {Select} from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
@@ -49,8 +49,11 @@ const Game = () => {
   const handleKeypadClick = (value: string) => {
     setValue('guess', watch('guess') + Number(value)); 
   };
+  const handleLevelSelect = (level: string) => {
+    setLevel(level);
+  };
 
-  const handleLevelChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleLevelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedLevel = e.target.value;
     setLevel(selectedLevel);
 
@@ -60,6 +63,7 @@ const Game = () => {
         setAttempts(6); // Normal
       } else {
         setAttempts(10);
+      }
 
     restartGame(`Difficult level: ${selectedLevel}`)
   };
@@ -86,6 +90,7 @@ const Game = () => {
     reset();
   };
 
+
   return (
     <Box p={5} maxWidth="400px" mx="auto" textAlign="center" >
         <Button  onClick={() => restartGame()} my={20}>
@@ -93,12 +98,43 @@ const Game = () => {
         </Button>
         
 
-        <Select value={level} onChange={handleLevelChange} mb="4" placeholder="select difficulty level">
-        <option value="Easy">Easy - 4 Attempts</option>
-        <option value="Normal">Normal - 6 Attempts</option>
-        <option value="Hard">Hard - 10 Attempts</option>
-      </Select>
-    
+        <Box>
+        <Input
+          value={level}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleLevelChange(e)}
+          placeholder="Select Difficulty Level"
+          mb="4"
+          readOnly
+        />
+
+        {/* Custom dropdown options */}
+        <Box border="1px solid" borderColor="gray.300" borderRadius="md">
+          <Button
+            width="100%"
+            variant="outline"
+            onClick={() => handleLevelSelect('Easy')}
+            mb="2"
+          >
+            Easy - 4 Attempts
+          </Button>
+          <Button
+            width="100%"
+            variant="outline"
+            onClick={() => handleLevelSelect('Normal')}
+            mb="2"
+          >
+            Normal - 6 Attempts
+          </Button>
+          <Button
+            width="100%"
+            variant="outline"
+            onClick={() => handleLevelSelect('Hard')}
+            mb="2"
+          >
+            Hard - 10 Attempts
+          </Button>
+        </Box>
+      </Box>
       
       <Text fontSize="3xl" fontWeight="bold" mb={4} border="3px solid #000" outline="4px solid rgba(0, 0, 0, 0.3)">
         Number Guesser Game
@@ -137,6 +173,6 @@ const Game = () => {
     </Box>
   );
 };
-}
+
 
 export default Game;
