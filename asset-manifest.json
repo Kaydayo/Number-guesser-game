@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/number-guesser-game/static/css/main.3a8649ab.css",
+    "main.js": "/number-guesser-game/static/js/main.c27eecc6.js",
+    "static/js/453.df3993be.chunk.js": "/number-guesser-game/static/js/453.df3993be.chunk.js",
+    "static/media/quest.jpg": "/number-guesser-game/static/media/quest.89e41552d328224e5285.jpg",
+    "index.html": "/number-guesser-game/index.html",
+    "main.3a8649ab.css.map": "/number-guesser-game/static/css/main.3a8649ab.css.map",
+    "main.c27eecc6.js.map": "/number-guesser-game/static/js/main.c27eecc6.js.map",
+    "453.df3993be.chunk.js.map": "/number-guesser-game/static/js/453.df3993be.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3a8649ab.css",
+    "static/js/main.c27eecc6.js"
+  ]
+}
