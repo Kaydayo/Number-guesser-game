@@ -3,7 +3,7 @@ import { Button, Box, Text } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import Keypad from './keypad';
+import Keypad from './Keypad';
 import { toast } from 'react-toastify'
 
 const Game = () => {
