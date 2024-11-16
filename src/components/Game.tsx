@@ -1,21 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Box, Text } from '@chakra-ui/react';
+import { Button, Box, Text, Input } from '@chakra-ui/react';
+import {Select} from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Keypad from './Keypad';
 import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+import { generateRandomNumber } from './utils';
 
 const Game = () => {
   const [secretNumber, setSecretNumber] = useState<number>(0);
   const [attempts, setAttempts] = useState<number>(5); 
-  const [guess, setGuess] = useState<string>('');
   const [gameOver, setGameOver] = useState<boolean>(false);
+  const [level, setLevel] = useState('Easy')
 
 
   useEffect(() => {
     setSecretNumber(Math.floor(Math.random() * 100) + 1); 
   }, []);
+
+  const restartGame = (text = 'Game restarted!!') => {
+    setSecretNumber(generateRandomNumber());
+    setValue('guess', 0);
+    setAttempts(10);
+    toast.success(text)
+  };
 
   
   const schema = Yup.object().shape({
@@ -30,44 +40,103 @@ const Game = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
+    setValue
   } = useForm({
     resolver: yupResolver(schema),
   });
+
+  const handleKeypadClick = (value: string) => {
+    setValue('guess', watch('guess') + Number(value)); 
+  };
+  const handleLevelSelect = (level: string) => {
+    setLevel(level);
+  };
+
+  const handleLevelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedLevel = e.target.value;
+    setLevel(selectedLevel);
+
+    if (selectedLevel === 'Easy') {
+        setAttempts(4); // Easy
+      } else if (selectedLevel === 'Normal') {
+        setAttempts(6); // Normal
+      } else {
+        setAttempts(10);
+      }
+
+    restartGame(`Difficult level: ${selectedLevel}`)
+  };
 
   
   const handleGuess = (data: { guess: number }) => {
     const userGuess = data.guess;
 
     if (userGuess === secretNumber) {
-        toast.success('Correct Guess! You guessed the correct number.', {
-            position: "top-center",
-            autoClose: 3000,
-          });
+        toast.success('Correct Guess! You guessed the correct number.');
       setGameOver(true);
     } else {
       setAttempts(attempts - 1);
       if (attempts <= 1) {
-        toast.error(`Game Over! You lost. The correct number was ${secretNumber}.`, {
-            position: "top-center",
-            autoClose: 3000,
-          });
+        toast.error(`Game Over! You lost. The correct number was ${secretNumber}.`);
         setGameOver(true);
       } else {
         const message = userGuess < secretNumber ? 'Too Low!' : 'Too High!';
-        toast.warn(`${message} You have ${attempts - 1} attempts left.`, {
-            position: "top-center",
-            autoClose: 3000,
-          });
+        toast.warn(`${message} You have ${attempts - 1} attempts left.`);
       }
     }
 
-    setGuess('');
+    setValue('guess',0);
     reset();
   };
 
+
   return (
-    <Box p={5} maxWidth="400px" mx="auto" textAlign="center">
-      <Text fontSize="3xl" fontWeight="bold" mb={4}>
+    <Box p={5} maxWidth="400px" mx="auto" textAlign="center" >
+        <Button  onClick={() => restartGame()} my={20}>
+            Restart Game
+        </Button>
+        
+
+        <Box>
+        <Input
+          value={level}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleLevelChange(e)}
+          placeholder="Select Difficulty Level"
+          mb="4"
+          readOnly
+        />
+
+        {/* Custom dropdown options */}
+        <Box border="1px solid" borderColor="gray.300" borderRadius="md">
+          <Button
+            width="100%"
+            variant="outline"
+            onClick={() => handleLevelSelect('Easy')}
+            mb="2"
+          >
+            Easy - 4 Attempts
+          </Button>
+          <Button
+            width="100%"
+            variant="outline"
+            onClick={() => handleLevelSelect('Normal')}
+            mb="2"
+          >
+            Normal - 6 Attempts
+          </Button>
+          <Button
+            width="100%"
+            variant="outline"
+            onClick={() => handleLevelSelect('Hard')}
+            mb="2"
+          >
+            Hard - 10 Attempts
+          </Button>
+        </Box>
+      </Box>
+      
+      <Text fontSize="3xl" fontWeight="bold" mb={4} border="3px solid #000" outline="4px solid rgba(0, 0, 0, 0.3)">
         Number Guesser Game
       </Text>
       {gameOver ? (
@@ -100,9 +169,10 @@ const Game = () => {
       <Box mt={4}>
         <Text fontSize="lg">Attempts Left: {attempts}</Text>
       </Box>
-      {!gameOver && <Keypad setGuess={setGuess} />}
+      {!gameOver && <Keypad setGuess={handleKeypadClick} />}
     </Box>
   );
 };
+
 
 export default Game;
