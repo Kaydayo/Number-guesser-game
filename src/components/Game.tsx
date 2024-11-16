@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Box, Text } from '@chakra-ui/react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Keypad from './Keypad';
@@ -9,7 +9,6 @@ import { toast, ToastContainer } from 'react-toastify'
 const Game = () => {
   const [secretNumber, setSecretNumber] = useState<number>(0);
   const [attempts, setAttempts] = useState<number>(5); 
-  const [guess, setGuess] = useState<string>('');
   const [gameOver, setGameOver] = useState<boolean>(false);
 
 
@@ -30,9 +29,16 @@ const Game = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
+    setValue
   } = useForm({
     resolver: yupResolver(schema),
   });
+
+  const handleKeypadClick = (value: string) => {
+    setValue('guess', watch('guess') + Number(value)); 
+  };
+
 
   
   const handleGuess = (data: { guess: number }) => {
@@ -61,7 +67,7 @@ const Game = () => {
       }
     }
 
-    setGuess('');
+    setValue('guess',0);
     reset();
   };
 
@@ -101,7 +107,7 @@ const Game = () => {
       <Box mt={4}>
         <Text fontSize="lg">Attempts Left: {attempts}</Text>
       </Box>
-      {!gameOver && <Keypad setGuess={setGuess} />}
+      {!gameOver && <Keypad setGuess={handleKeypadClick} />}
     </Box>
   );
 };
