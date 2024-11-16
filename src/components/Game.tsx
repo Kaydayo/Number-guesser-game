@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Box, Text } from '@chakra-ui/react';
-import { useForm, useWatch } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Keypad from './Keypad';
-import { toast, ToastContainer } from 'react-toastify'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 const Game = () => {
   const [secretNumber, setSecretNumber] = useState<number>(0);
@@ -45,25 +46,16 @@ const Game = () => {
     const userGuess = data.guess;
 
     if (userGuess === secretNumber) {
-        toast.success('Correct Guess! You guessed the correct number.', {
-            position: "top-center",
-            autoClose: 3000,
-          });
+        toast.success('Correct Guess! You guessed the correct number.');
       setGameOver(true);
     } else {
       setAttempts(attempts - 1);
       if (attempts <= 1) {
-        toast.error(`Game Over! You lost. The correct number was ${secretNumber}.`, {
-            position: "top-center",
-            autoClose: 3000,
-          });
+        toast.error(`Game Over! You lost. The correct number was ${secretNumber}.`);
         setGameOver(true);
       } else {
         const message = userGuess < secretNumber ? 'Too Low!' : 'Too High!';
-        toast.warn(`${message} You have ${attempts - 1} attempts left.`, {
-            position: "top-center",
-            autoClose: 3000,
-          });
+        toast.warn(`${message} You have ${attempts - 1} attempts left.`);
       }
     }
 
@@ -73,7 +65,7 @@ const Game = () => {
 
   return (
     <Box p={5} maxWidth="400px" mx="auto" textAlign="center">
-          <ToastContainer />
+        
       <Text fontSize="3xl" fontWeight="bold" mb={4}>
         Number Guesser Game
       </Text>
