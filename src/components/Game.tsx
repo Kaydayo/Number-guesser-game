@@ -1,21 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Box, Text } from '@chakra-ui/react';
+import {Select} from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Keypad from './Keypad';
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import { generateRandomNumber } from './utils';
 
 const Game = () => {
   const [secretNumber, setSecretNumber] = useState<number>(0);
   const [attempts, setAttempts] = useState<number>(5); 
   const [gameOver, setGameOver] = useState<boolean>(false);
+  const [level, setLevel] = useState('Easy')
 
 
   useEffect(() => {
     setSecretNumber(Math.floor(Math.random() * 100) + 1); 
   }, []);
+
+  const restartGame = (text = 'Game restarted!!') => {
+    setSecretNumber(generateRandomNumber());
+    setValue('guess', 0);
+    setAttempts(10);
+    toast.success(text)
+  };
 
   
   const schema = Yup.object().shape({
@@ -40,6 +50,19 @@ const Game = () => {
     setValue('guess', watch('guess') + Number(value)); 
   };
 
+  const handleLevelChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedLevel = e.target.value;
+    setLevel(selectedLevel);
+
+    if (selectedLevel === 'Easy') {
+        setAttempts(4); // Easy
+      } else if (selectedLevel === 'Normal') {
+        setAttempts(6); // Normal
+      } else {
+        setAttempts(10);
+
+    restartGame(`Difficult level: ${selectedLevel}`)
+  };
 
   
   const handleGuess = (data: { guess: number }) => {
@@ -64,9 +87,20 @@ const Game = () => {
   };
 
   return (
-    <Box p={5} maxWidth="400px" mx="auto" textAlign="center">
+    <Box p={5} maxWidth="400px" mx="auto" textAlign="center" >
+        <Button  onClick={() => restartGame()} my={20}>
+            Restart Game
+        </Button>
         
-      <Text fontSize="3xl" fontWeight="bold" mb={4}>
+
+        <Select value={level} onChange={handleLevelChange} mb="4" placeholder="select difficulty level">
+        <option value="Easy">Easy - 4 Attempts</option>
+        <option value="Normal">Normal - 6 Attempts</option>
+        <option value="Hard">Hard - 10 Attempts</option>
+      </Select>
+    
+      
+      <Text fontSize="3xl" fontWeight="bold" mb={4} border="3px solid #000" outline="4px solid rgba(0, 0, 0, 0.3)">
         Number Guesser Game
       </Text>
       {gameOver ? (
@@ -103,5 +137,6 @@ const Game = () => {
     </Box>
   );
 };
+}
 
 export default Game;
