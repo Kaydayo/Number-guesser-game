@@ -5,10 +5,12 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image: url('/public/quest.jpg'); 
-  background-size: cover; 
-  background-position: center center; 
-  background-repeat: no-repeat; 
+
+  background: linear-gradient(rgba(208, 56, 56, 0.5), rgba(247, 243, 169, 0.5)), 
+              url('/public/quest.jpg');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 
 code {

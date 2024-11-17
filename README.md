@@ -1,5 +1,9 @@
 # Number Guesser Game
 
+## Screenshot
+
+![Number Guesser Game Screenshot](./public/project.png)
+
 A simple and interactive number guessing game built using **React** and **Chakra UI**. The goal of the game is to guess a secret number within a limited number of attempts based on the difficulty level chosen.
 
 ## Features

@@ -22,8 +22,14 @@ const Game = () => {
 
   const restartGame = (text = 'Game restarted!!') => {
     setSecretNumber(generateRandomNumber());
-    setValue('guess', 0);
-    setAttempts(10);
+    reset()
+    if (level === 'Easy') {
+        setAttempts(4); 
+      } else if (level === 'Normal') {
+        setAttempts(6); 
+      } else {
+        setAttempts(10);
+      }
     toast.success(text)
   };
 
@@ -41,7 +47,7 @@ const Game = () => {
     formState: { errors },
     reset,
     watch,
-    setValue
+    setValue,
   } = useForm({
     resolver: yupResolver(schema),
   });
@@ -51,22 +57,9 @@ const Game = () => {
   };
   const handleLevelSelect = (level: string) => {
     setLevel(level);
+    restartGame(`Difficult level: ${level}`)
   };
 
-  const handleLevelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedLevel = e.target.value;
-    setLevel(selectedLevel);
-
-    if (selectedLevel === 'Easy') {
-        setAttempts(4); // Easy
-      } else if (selectedLevel === 'Normal') {
-        setAttempts(6); // Normal
-      } else {
-        setAttempts(10);
-      }
-
-    restartGame(`Difficult level: ${selectedLevel}`)
-  };
 
   
   const handleGuess = (data: { guess: number }) => {
@@ -92,53 +85,77 @@ const Game = () => {
 
 
   return (
-    <Box p={5} maxWidth="400px" mx="auto" textAlign="center" >
-        <Button  onClick={() => restartGame()} my={20}>
-            Restart Game
-        </Button>
+    <Box p={5} maxWidth="400px" mx="auto" textAlign="center">
         
 
         <Box>
-        <Input
+            <Box position={"absolute"} left={"20px"} justifyContent={"left"}>
+                <Text  fontWeight={"bolder"} style={{
+    textShadow: `
+      -2px -2px 0 #fff
+    `,
+  }}>Difficulty Level: </Text>
+            <Input
           value={level}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleLevelChange(e)}
           placeholder="Select Difficulty Level"
-          mb="4"
+          mb="1"
           readOnly
+          bgColor={"white"}
+          color={"red.600"}
+          fontWeight={"bold"}
+         
         />
+            </Box>
+       
 
         {/* Custom dropdown options */}
-        <Box border="1px solid" borderColor="gray.300" borderRadius="md">
+        <Box display={"flex"} gap={"8"} justifyContent={"center"}>
           <Button
-            width="100%"
-            variant="outline"
+            width="60px"
             onClick={() => handleLevelSelect('Easy')}
             mb="2"
+            bgColor={"pink.400"}
           >
-            Easy - 4 Attempts
+            Easy
           </Button>
           <Button
-            width="100%"
-            variant="outline"
+            width="60px"
             onClick={() => handleLevelSelect('Normal')}
             mb="2"
+            bgColor={"yellow.400"}
           >
-            Normal - 6 Attempts
+            Normal
           </Button>
           <Button
-            width="100%"
-            variant="outline"
+            width="60px"
             onClick={() => handleLevelSelect('Hard')}
             mb="2"
+            bgColor={"orange.400"}
           >
-            Hard - 10 Attempts
+            Hard
           </Button>
         </Box>
       </Box>
       
-      <Text fontSize="3xl" fontWeight="bold" mb={4} border="3px solid #000" outline="4px solid rgba(0, 0, 0, 0.3)">
-        Number Guesser Game
-      </Text>
+      <Text
+  fontSize="3xl"
+  fontWeight="bold"
+  mb={1}
+  style={{
+    textShadow: `
+      -2px -2px 0 #fff, 
+      2px -2px 0 #fff, 
+      -2px 2px 0 #fff, 
+      2px 2px 0 #fff,
+      -3px -3px 0 #fff,
+      3px -3px 0 #fff,
+      -3px 3px 0 #fff,
+      3px 3px 0 #fff
+    `,
+  }}
+>
+  Number Guesser Game
+</Text>
       {gameOver ? (
         <Box>
           <Button colorScheme="blue" onClick={() => window.location.reload()}>
@@ -147,7 +164,15 @@ const Game = () => {
         </Box>
       ) : (
         <form onSubmit={handleSubmit(handleGuess)}>
-          <Text mb={2}>Enter your guess (1 - 100):</Text>
+          <Text mb={1} color={"white"}   style={{
+    textShadow: `
+      -1px -1px 0 #000, 
+      1px -1px 0 #000, 
+      -1px 1px 0 #000, 
+      1px 1px 0 #000
+    `,
+  }}
+>Enter your guess (1 - 100):</Text>
           <input
             type="number"
             {...register('guess')}
@@ -159,15 +184,18 @@ const Game = () => {
               {errors?.guess?.message}
             </Text>
           )}
-          <Box mt={4}>
+          <Box mt={0} display={"flex"} alignItems={"center"} justifyContent={"center"} gap={10} maxH={"100px"}>
             <Button type="submit" colorScheme="teal" disabled={gameOver}>
               Submit Guess
             </Button>
+            <Button  onClick={() => restartGame()} my={20}>
+            Restart Game
+        </Button>
           </Box>
         </form>
       )}
-      <Box mt={4}>
-        <Text fontSize="lg">Attempts Left: {attempts}</Text>
+      <Box mt={0} position={"absolute"} top={4} right={"20px"} bgColor={"white"} borderRadius={"10px"} px={4}>
+        <Text fontSize="lg" fontWeight={'bolder'}>Attempts Left: <Box as="span" color={"blue.500"}>{attempts}</Box></Text>
       </Box>
       {!gameOver && <Keypad setGuess={handleKeypadClick} />}
     </Box>
