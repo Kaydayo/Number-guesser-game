@@ -2,7 +2,7 @@
   "name": "number-guesser-game",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://Kaydayo.github.io/number-guesser-game",
+  "homepage": ".",
   "dependencies": {
     "@chakra-ui/react": "^3.1.2",
     "@emotion/react": "^11.13.3",
